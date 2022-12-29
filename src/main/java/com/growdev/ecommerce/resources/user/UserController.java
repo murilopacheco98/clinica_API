@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
