@@ -18,6 +18,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 //implements UserDetailsService
 @Service
 @Transactional
@@ -43,15 +49,21 @@ public class UserService { //foi implementado porque é ele que retorna
 
   public UserEntity create(UserInsertDTO userInsertDTO) {
     UserEntity userEntity = new UserEntity();
+    UserEntity userFound = userRepository.findByEmail(userInsertDTO.getEmail());
+
+    if (userFound != null) throw new BadRequestException("Este email já existe");
+
     userEntity.setEmail(userInsertDTO.getEmail());
     userEntity.setSenha(passwordEncoder.encode(userInsertDTO.getSenha()));
     userEntity.setCodigoVerificador(userInsertDTO.getCodigoVerificador());
+
     if (userInsertDTO.getAuthority().isEmpty()) throw new ResourceNotFoundException("A role é obrigatória.");
     for (Authority authority : userInsertDTO.getAuthority()) {
       Authority authorityFound = roleRepository.findByAuthority(authority.getAuthority());
       if (authorityFound == null) throw new BadRequestException("Está role não existe.");
       userEntity.getAuthority().add(authorityFound);
     }
+
     return userEntity;
   }
 

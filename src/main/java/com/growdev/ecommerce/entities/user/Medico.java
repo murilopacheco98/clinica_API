@@ -13,6 +13,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,10 +30,11 @@ public class Medico extends AbstractEntity {
 //    private Long id;
     @Column(name = "nome", nullable = false)
     private String nome;
-    @Column(name = "nome_profissional", unique = true, nullable = false)
+
+    @Column(name = "nome_profissional", nullable = false)
     private String nomeJaleco;
     @Column(name = "crm", unique = true, nullable = false)
-    private Integer crm;
+    private String crm;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "data_inscricao", nullable = false)
     private LocalDate dataInscricao;

@@ -18,10 +18,8 @@ public class Especialidade implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String nome;
-
     @Column(name = "descricao", columnDefinition = "TEXT", nullable = false)
     private String descricao;
 

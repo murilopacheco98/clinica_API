@@ -1,17 +1,18 @@
 INSERT INTO tb_user (nome, email, senha, tipo_do_usuario)
 VALUES ('nomeadmin', 'admin@gmail.com', '$2a$10$/v7td4/mgxCOwUJDKwmzsO29T9MzrAGz6B/jrMvB.ZQ2U35hLTg5W', 'admin');
 
+INSERT INTO tb_authority (authority) VALUES ('ADMIN');
+INSERT INTO tb_authority (authority) VALUES ('PACIENTE');
+INSERT INTO tb_authority (authority) VALUES ('MEDICO');
+
+INSERT INTO user_authority (user_id, authority_id) VALUES (1, 1);
+
 --INSERT INTO tb_user (nome, email, senha, tipo_do_usuario)
 --VALUES ('nomepaciente', 'paciente@gmail.com', '$2a$10$/v7td4/mgxCOwUJDKwmzsO29T9MzrAGz6B/jrMvB.ZQ2U35hLTg5W', 'paciente');
 --
 --INSERT INTO tb_user (nome, email, senha, tipo_do_usuario)
 --VALUES ('nomemedico', 'medico@gmail.com', '$2a$10$/v7td4/mgxCOwUJDKwmzsO29T9MzrAGz6B/jrMvB.ZQ2U35hLTg5W', 'medico');
 
-INSERT INTO tb_authority (authority) VALUES ('ADMIN');
-INSERT INTO tb_authority (authority) VALUES ('PACIENTE');
-INSERT INTO tb_authority (authority) VALUES ('MEDICO');
-
-INSERT INTO user_authority (user_id, authority_id) VALUES (1, 1);
 --INSERT INTO user_authority (user_id, authority_id) VALUES (2, 2);
 --INSERT INTO user_authority (user_id, authority_id) VALUES (3, 3);
 

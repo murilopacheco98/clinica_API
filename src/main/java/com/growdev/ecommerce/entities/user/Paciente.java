@@ -1,5 +1,6 @@
 package com.growdev.ecommerce.entities.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.growdev.ecommerce.entities.Agendamento;
 import com.growdev.ecommerce.entities.Consulta;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -24,12 +26,14 @@ public class Paciente extends AbstractEntity {
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
 
-    @Column(name = "nome", unique = true, nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
     @Column(name = "data_nascimento", nullable = false)
+    @JsonFormat(pattern="dd/MM/yyyy")
     private Date dataNascimento;
-    private Long telefone;
+
+    private String telefone;
 
     @Column(unique = true, nullable = false)
     private String cpf;

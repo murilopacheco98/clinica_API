@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +31,11 @@ public class EspecialidadeService {
         return especialidadeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("NOT FOUND " + id));
     }
 
+    @Transactional(readOnly = true)
+    public Page<Especialidade> findAllPaged(Pageable pageable) {
+        return especialidadeRepository.findAll(pageable);
+    }
+
     public void delete(Long id) {
         try {
             especialidadeRepository.deleteById(id);
@@ -45,11 +50,10 @@ public class EspecialidadeService {
 
     public Especialidade create(Especialidade especialidade) {
         try {
-            especialidadeRepository.save(especialidade);
+            return especialidadeRepository.save(especialidade);
         } catch (Exception e) {
-            throw new BadRequestException("Can't save this city.");
+            throw new BadRequestException("Não foi possível criar está especialidade.");
         }
-        return especialidade;
     }
 
     public Especialidade update(Especialidade especialidadeUpdated, Long id) {
@@ -64,8 +68,7 @@ public class EspecialidadeService {
         return especialidadeBD;
     }
 
-    @Transactional(readOnly = true)
-    public Page<Especialidade> findAllPaged(PageRequest pageRequest) {
-        return especialidadeRepository.findAll(pageRequest);
+    public Page<Especialidade> searchEspecialidade(String search, Pageable pageable) {
+        return especialidadeRepository.findAllByNome(search, pageable);
     }
 }

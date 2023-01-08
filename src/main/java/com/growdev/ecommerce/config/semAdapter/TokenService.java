@@ -1,6 +1,5 @@
 package com.growdev.ecommerce.config.semAdapter;
 
-import com.growdev.ecommerce.config.semAdapter.TokenReponse;
 import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.entities.user.UserEntity;
 import com.growdev.ecommerce.exceptions.exception.ResourceNotFoundException;
@@ -27,7 +26,7 @@ public class TokenService {
     UserRepository userRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-    public TokenReponse generateToken(String email, String senha) {
+    public TokenResponse generateToken(String email, String senha) {
         Instant instantNow = Instant.now();
         UserEntity user = userRepository.findByEmail(email);
         if (user == null) {
@@ -57,6 +56,6 @@ public class TokenService {
         String messageExpirationDate = splitExpirationDate[0] + " " + Arrays.toString(splitExpirationDate[1].split("\\."));
 
         UserDTO userDTO = new UserDTO(user);
-        return new TokenReponse(userDTO, token, timeToken, messageExpirationDate);
+        return new TokenResponse(user.getId(), userDTO, token, timeToken, messageExpirationDate);
     }
 }

@@ -10,10 +10,10 @@ import java.lang.annotation.Target;
 //ESTAMOS CRIANDO UMA VALIDAÇÃO (annotations
 //@Constraint(qual a classe que implementa a validação)
 //@Target - @Reten
-@Constraint(validatedBy = UserInsertValidationBean.class)
+@Constraint(validatedBy = UserPacienteDTOValidationBean.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UserInsertValidation {
+public @interface UserPacienteDTOValidation {
 
   //implementação padrão do spring para uso de annotations
   String message() default "Validator error";

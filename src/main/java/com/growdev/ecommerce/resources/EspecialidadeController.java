@@ -5,6 +5,7 @@ import com.growdev.ecommerce.services.EspecialidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,26 +23,19 @@ public class EspecialidadeController {
     EspecialidadeService especialidadeService;
 
     @GetMapping("/get/pageable")
-    public ResponseEntity<Page<Especialidade>> findAllPageable(
-            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,//Primeira página
-            @RequestParam(value = "linhasPorPagina", defaultValue = "1") Integer linhasPorPagina,//quantidade de registros por pagina
-            @RequestParam(value = "direction", defaultValue = "ASC") String direction,//direção Crescente
-            @RequestParam(value = "ordenado", defaultValue = "nome") String nome //Ordem
-    ) {
-        PageRequest list = PageRequest.of(pagina, linhasPorPagina, Sort.Direction.valueOf(direction), nome);
-        Page<Especialidade> authorities = especialidadeService.findAllPaged(list);
+    public ResponseEntity<Page<Especialidade>> findAllPageable(@RequestParam(defaultValue = "0") Integer page,
+                                                               @RequestParam(defaultValue = "10") Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "nome");
+        Page<Especialidade> authorities = especialidadeService.findAllPaged(pageable);
         return ResponseEntity.ok().body(authorities);
     }
 
-    @GetMapping("/get/all")
-    public ResponseEntity<List<Especialidade>> getAllPageable() {
-        return ResponseEntity.ok().body(especialidadeService.findAll());
-    }
-
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Especialidade> getById(@PathVariable("id") Long id) {
-        Especialidade especialidade = especialidadeService.findById(id);
-        return ResponseEntity.ok().body(especialidade);
+    @GetMapping("/get/search")
+    public ResponseEntity<Page<Especialidade>> search(@RequestParam(defaultValue = "0") Integer page,
+                                                      @RequestParam(defaultValue = "10") Integer size, @RequestParam String search) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "nome");
+        Page<Especialidade> especialidadePage = especialidadeService.searchEspecialidade(search, pageable);
+        return ResponseEntity.ok().body(especialidadePage);
     }
 
     @DeleteMapping("/delete/{id}")

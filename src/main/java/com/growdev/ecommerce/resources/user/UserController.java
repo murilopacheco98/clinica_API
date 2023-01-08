@@ -13,6 +13,7 @@ import com.growdev.ecommerce.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -34,13 +35,13 @@ public class UserController {
   PacienteService pacienteService;
 
   @GetMapping("/get/pageable")
-  public ResponseEntity<Page<UserDTO>> findAllUserPageable(Pageable pageable) {
+  public ResponseEntity<Page<UserDTO>> findAllUserPageable(@RequestBody Pageable pageable) {
     Page<UserDTO> list = userService.findAllPageable(pageable);
     return ResponseEntity.ok().body(list);
   }
 
   @GetMapping("/get/{id}")
-  public ResponseEntity<UserDTO> findUserById(Long id) {
+  public ResponseEntity<UserDTO> findUserById(@RequestParam Long id) {
     UserDTO dto = userService.findById(id);
     return ResponseEntity.ok().body(dto);
   }
@@ -55,12 +56,10 @@ public class UserController {
   }
 
   @PostMapping("/post/paciente")
-  public ResponseEntity<PacienteDTO> signUpPaciente(@Valid @RequestBody UserPacienteDTO userPacienteDTO){
+  public ResponseEntity<?> signUpPaciente(@Valid @RequestBody UserPacienteDTO userPacienteDTO){
     UserEntity userEntity = userService.create(userPacienteDTO.getUserInsertDTO());
-    PacienteDTO pacienteDTO = pacienteService.create(userPacienteDTO.getPacienteDTO(), userEntity.getEmail());
-    URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/post/paciente").buildAndExpand(userEntity.getId())
-            .toUri();
-    return ResponseEntity.ok().body(pacienteDTO);
+    PacienteDTO pacienteDTO = pacienteService.create(userPacienteDTO.getPacienteDTO(), userEntity);
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @PutMapping("/put/{id}")

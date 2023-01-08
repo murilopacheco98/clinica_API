@@ -57,6 +57,10 @@ public class MedicoService { //foi implementado porque é ele que retorna
         Medico medico = new Medico();
         medico.setNome(medicoDTO.getNome());
         medico.setNomeJaleco(medicoDTO.getNomeJaleco());
+
+        Medico medicoFound = medicoRepository.findByCrm(medicoDTO.getCrm());
+        if (medicoFound != null) throw new BadRequestException("Este CRM já está cadastrado.");
+
         medico.setCrm(medicoDTO.getCrm());
         medico.setDataInscricao(medicoDTO.getDataInscricao());
         if (medicoDTO.getEspecialidade().isEmpty()) {
@@ -73,8 +77,11 @@ public class MedicoService { //foi implementado porque é ele que retorna
             throw new BadRequestException("Não foi possível salvar o usuário");
         }
         UserEntity userFound = userRepository.findByEmail(userEntity.getEmail());
+
         if (userFound == null) throw new ResourceNotFoundException("Este usuário não existe.");
+
         medico.setUserEntity(userFound);
+
         try {
             medicoRepository.save(medico);
         } catch (Exception e) {

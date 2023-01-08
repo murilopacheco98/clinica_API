@@ -7,6 +7,7 @@ import com.growdev.ecommerce.entities.Agendamento;
 import com.growdev.ecommerce.entities.Consulta;
 import com.growdev.ecommerce.entities.user.Paciente;
 import com.growdev.ecommerce.entities.user.UserEntity;
+import com.growdev.ecommerce.exceptions.exception.BadRequestException;
 import com.growdev.ecommerce.exceptions.exception.InternalServerException;
 import com.growdev.ecommerce.exceptions.exception.ResourceNotFoundException;
 import com.growdev.ecommerce.repositories.*;
@@ -45,14 +46,32 @@ public class PacienteService { //foi implementado porque é ele que retorna
         return new PacienteDTO(usuario);
     }
 
-    public PacienteDTO create(PacienteDTO pacienteDTO, String email) {
+    public PacienteDTO create(PacienteDTO pacienteDTO, UserEntity userEntity) {
         Paciente paciente = new Paciente();
         paciente.setNome(pacienteDTO.getNome());
         paciente.setDataNascimento(pacienteDTO.getDataNascimento());
+
+        Paciente pacienteFound = pacienteRepository.findByCpf(pacienteDTO.getCpf());
+        if (pacienteFound != null) throw new BadRequestException("Este CPF já está cadastrado.");
+
         paciente.setCpf(pacienteDTO.getCpf());
-        UserEntity userEntity = userRepository.findByEmail(email);
-        paciente.setUsuario(userEntity);
-        pacienteRepository.save(paciente);
+
+        try {
+            userRepository.save(userEntity);
+        } catch (Exception e) {
+            throw new BadRequestException("Não foi possível salvar o usuário");
+        }
+        UserEntity userFound = userRepository.findByEmail(userEntity.getEmail());
+
+        if (userFound == null) throw new ResourceNotFoundException("Este usuário não existe.");
+
+        paciente.setUsuario(userFound);
+
+        try {
+            pacienteRepository.save(paciente);
+        } catch (Exception e) {
+            throw new InternalServerException("Não foi possível salvar este paciente.");
+        }
         return new PacienteDTO(paciente);
     }
 
@@ -61,6 +80,7 @@ public class PacienteService { //foi implementado porque é ele que retorna
         paciente.setNome(pacienteDTO.getNome());
         paciente.setDataNascimento(pacienteDTO.getDataNascimento());
         paciente.setCpf(pacienteDTO.getCpf());
+
         for (AgendamentoDTO agendamentoDTO : pacienteDTO.getAgendamentoDTOs()) {
             Agendamento agendamento = new Agendamento(agendamentoDTO);
             paciente.getAgendamentos().add(agendamento);

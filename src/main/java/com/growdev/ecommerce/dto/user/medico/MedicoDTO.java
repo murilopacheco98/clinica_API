@@ -27,7 +27,7 @@ public class MedicoDTO {
     @NotBlank(message = "Campo obrigatório.")
     private String nomeJaleco;
     @NotBlank(message = "Campo Obrigatório")
-    private Integer crm;
+    private String crm;
     private LocalDate dataInscricao;
     private Set<Especialidade> especialidade = new HashSet<>();
     private Set<AgendamentoDTO> agendamentoDTOs = new HashSet<>();

@@ -1,11 +1,10 @@
 package com.growdev.ecommerce.config.semAdapter;
 
-import com.growdev.ecommerce.config.semAdapter.TokenReponse;
-import com.growdev.ecommerce.config.semAdapter.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/oauth")
 public class TokenController {
@@ -13,8 +12,8 @@ public class TokenController {
     TokenService tokenService;
 
     @PostMapping("/post")
-    public ResponseEntity<TokenReponse> signIn(@RequestParam String email, @RequestParam String senha) {
-        TokenReponse token = tokenService.generateToken(email, senha);
-        return ResponseEntity.ok().body(token);
+    public ResponseEntity<TokenResponse> signIn(@RequestParam String email, @RequestParam String senha) {
+        TokenResponse tokenResponse = tokenService.generateToken(email, senha);
+        return ResponseEntity.ok().body(tokenResponse);
     }
 }

@@ -26,7 +26,7 @@ public class PacienteDTO {
     private Date dataNascimento;
     @NotBlank(message = "Campo Obrigatório")
     private String cpf;
-    private Long telefone;
+    private String telefone;
     private Set<AgendamentoDTO> agendamentoDTOs = new HashSet<>();
     private Set<ConsultaDTO> consultaDTOs = new HashSet<>();
     private UserDTO userDTO;
