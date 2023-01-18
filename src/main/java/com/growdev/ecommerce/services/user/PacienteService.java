@@ -2,6 +2,7 @@ package com.growdev.ecommerce.services.user;
 
 import com.growdev.ecommerce.dto.AgendamentoDTO;
 import com.growdev.ecommerce.dto.ConsultaDTO;
+import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.dto.user.user.PacienteDTO;
 import com.growdev.ecommerce.entities.Agendamento;
 import com.growdev.ecommerce.entities.Consulta;
@@ -41,8 +42,8 @@ public class PacienteService { //foi implementado porque é ele que retorna
     }
 
     @Transactional(readOnly = true)
-    public PacienteDTO findById(Long id) {
-        Paciente usuario = pacienteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+    public PacienteDTO findByEmail(String email) {
+        Paciente usuario = pacienteRepository.findByEmail(email);
         return new PacienteDTO(usuario);
     }
 

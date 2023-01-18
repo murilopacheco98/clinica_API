@@ -12,6 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "especialidade")
 public class Especialidade implements Serializable {

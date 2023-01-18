@@ -35,7 +35,6 @@ public class PacienteDTO {
         this.nome = paciente.getNome();
         this.dataNascimento = paciente.getDataNascimento();
         this.cpf = paciente.getCpf();
-
         paciente.getConsultas().forEach(consulta -> this.consultaDTOs.add(new ConsultaDTO(consulta)));
         paciente.getAgendamentos().forEach(agendamento -> this.agendamentoDTOs.add(new AgendamentoDTO(agendamento)));
         this.userDTO = new UserDTO(paciente.getUsuario());

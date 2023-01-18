@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "tb_user")
 public class UserEntity implements UserDetails, Serializable {//vai ser a classe que retorna o acesso - spring security
@@ -54,12 +55,12 @@ public class UserEntity implements UserDetails, Serializable {//vai ser a classe
   @Column(name = "data_atualizacao")
   private Instant atualizado;
 
-//  public UserEntity(UserDTO userDTO) {
-//    this.email = userDTO.getEmail();
-//    this.typeUser = userDTO.
-//    this.codigoVerificador
-//    this.authority
-//  }
+  public UserEntity(UserDTO userDTO) {
+    this.email = userDTO.getEmail();
+//    this.senha = userDTO.get
+    this.codigoVerificador = userDTO.getCodigoVerificador();
+    this.authority.addAll(userDTO.getAuthority());
+  }
   @PrePersist
   public void prePersist() {
     criado = Instant.now();

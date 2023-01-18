@@ -22,6 +22,12 @@ public class EspecialidadeController {
     @Autowired
     EspecialidadeService especialidadeService;
 
+    @GetMapping("/get/all")
+    public ResponseEntity<List<Especialidade>> findAll() {
+        List<Especialidade> especialidadeList = especialidadeService.findAllOrderByNomeAsc();
+        return ResponseEntity.ok().body(especialidadeList);
+    }
+
     @GetMapping("/get/pageable")
     public ResponseEntity<Page<Especialidade>> findAllPageable(@RequestParam(defaultValue = "0") Integer page,
                                                                @RequestParam(defaultValue = "10") Integer size) {

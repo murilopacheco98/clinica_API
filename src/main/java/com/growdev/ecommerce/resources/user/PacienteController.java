@@ -24,9 +24,9 @@ public class PacienteController {
         return ResponseEntity.ok().body(authorities);
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<PacienteDTO> getById(@PathVariable("id") Long id) {
-        PacienteDTO pacienteDTO = pacienteService.findById(id);
+    @GetMapping("/get/{email}")
+    public ResponseEntity<PacienteDTO> getById(@PathVariable("email") String email) {
+        PacienteDTO pacienteDTO = pacienteService.findByEmail(email);
         return ResponseEntity.ok().body(pacienteDTO);
     }
 

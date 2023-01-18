@@ -52,16 +52,16 @@ public class AgendamentoController {
   }
 
   @PostMapping("/post")
-  public ResponseEntity<AgendamentoDTO> insert(@RequestBody AgendamentoDTO cityDTO) {
-    cityDTO = agendamentoService.create(cityDTO);
+  public ResponseEntity<AgendamentoDTO> insert(@RequestBody AgendamentoDTO agendamentoDTO) {
+    agendamentoDTO = agendamentoService.create(agendamentoDTO);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-      .buildAndExpand(cityDTO.getId()).toUri();
-    return ResponseEntity.created(uri).body(cityDTO);
+      .buildAndExpand(agendamentoDTO.getId()).toUri();
+    return ResponseEntity.created(uri).body(agendamentoDTO);
   }
 
   @PutMapping("/put/{id}")
-  public ResponseEntity<AgendamentoDTO> atualizar(@Valid @RequestBody AgendamentoDTO cityDTO, @PathVariable Long id) {
-    cityDTO = agendamentoService.update(cityDTO, id);
-    return ResponseEntity.ok().body(cityDTO);
+  public ResponseEntity<AgendamentoDTO> atualizar(@Valid @RequestBody AgendamentoDTO agendamentoDTO, @PathVariable Long id) {
+    agendamentoDTO = agendamentoService.update(agendamentoDTO, id);
+    return ResponseEntity.ok().body(agendamentoDTO);
   }
 }

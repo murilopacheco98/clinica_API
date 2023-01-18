@@ -22,8 +22,8 @@ public class EspecialidadeService {
     EspecialidadeRepository especialidadeRepository;
 
     @Transactional(readOnly = true)
-    public List<Especialidade> findAll() {
-        return especialidadeRepository.findAll();
+    public List<Especialidade> findAllOrderByNomeAsc() {
+        return especialidadeRepository.findAllByOrderByNomeAsc();
     }
 
     @Transactional(readOnly = true)
@@ -69,6 +69,7 @@ public class EspecialidadeService {
     }
 
     public Page<Especialidade> searchEspecialidade(String search, Pageable pageable) {
+        search = search.substring(0,1).toUpperCase().concat(search.substring(1));
         return especialidadeRepository.findAllByNome(search, pageable);
     }
 }

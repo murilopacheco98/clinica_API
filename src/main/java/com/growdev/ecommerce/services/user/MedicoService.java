@@ -48,8 +48,11 @@ public class MedicoService { //foi implementado porque é ele que retorna
     }
 
     @Transactional(readOnly = true)
-    public MedicoDTO findById(Long id) {
-        Medico usuario = medicoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+    public MedicoDTO findByEmail(String email) {
+        Medico usuario = medicoRepository.findByEmail(email);
+        if (usuario == null) {
+            throw new ResourceNotFoundException("Usuário não encontrado");
+        }
         return new MedicoDTO(usuario);
     }
 

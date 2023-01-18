@@ -31,9 +31,9 @@ public class MedicoController {
         return ResponseEntity.ok().body(medicoDTOs);
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<MedicoDTO> getById(@PathVariable("id") Long id) {
-        MedicoDTO medicoDTO = medicoService.findById(id);
+    @GetMapping("/get/{email}")
+    public ResponseEntity<MedicoDTO> getById(@PathVariable("email") String email) {
+        MedicoDTO medicoDTO = medicoService.findByEmail(email);
         return ResponseEntity.ok().body(medicoDTO);
     }
 

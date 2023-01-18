@@ -2,6 +2,7 @@ package com.growdev.ecommerce.entities.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.growdev.ecommerce.dto.user.user.PacienteDTO;
 import com.growdev.ecommerce.entities.Agendamento;
 import com.growdev.ecommerce.entities.Consulta;
 import lombok.AllArgsConstructor;
@@ -49,4 +50,12 @@ public class Paciente extends AbstractEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "paciente")
     private Set<Consulta> consultas = new HashSet<>();
+
+    public Paciente(PacienteDTO pacienteDTO) {
+        this.nome = pacienteDTO.getNome();
+        this.cpf = pacienteDTO.getCpf();
+        this.telefone = pacienteDTO.getTelefone();
+        this.dataNascimento = pacienteDTO.getDataNascimento();
+        this.usuario = new UserEntity(pacienteDTO.getUserDTO());
+    }
 }

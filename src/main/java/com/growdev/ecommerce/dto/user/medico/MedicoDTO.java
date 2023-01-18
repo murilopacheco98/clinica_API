@@ -6,11 +6,11 @@ import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.entities.Especialidade;
 import com.growdev.ecommerce.entities.user.Medico;
 import com.growdev.ecommerce.entities.user.UserEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -20,7 +20,10 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+//@ToString
 public class MedicoDTO {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank(message = "Campo obrigatório.")
     private String nome;

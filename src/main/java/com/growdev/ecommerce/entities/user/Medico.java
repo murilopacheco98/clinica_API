@@ -1,15 +1,11 @@
 package com.growdev.ecommerce.entities.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
 import com.growdev.ecommerce.entities.Agendamento;
 import com.growdev.ecommerce.entities.Consulta;
 import com.growdev.ecommerce.entities.Especialidade;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -22,6 +18,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "medico")
 public class Medico extends AbstractEntity {
@@ -49,6 +46,7 @@ public class Medico extends AbstractEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "medico")
     private Set<Agendamento> agendamentos = new HashSet<>();
+//    private Set<Horario> horarios = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario")

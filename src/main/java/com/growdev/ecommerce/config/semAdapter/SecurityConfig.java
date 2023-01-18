@@ -10,13 +10,10 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,7 +50,8 @@ public class SecurityConfig {
                         .antMatchers("/medico/get/**").permitAll()
                         .antMatchers("/medico/put/{id}").hasAuthority("SCOPE_MEDICO")
 
-                        .antMatchers("/paciente/get/**").hasAnyAuthority("SCOPE_MEDICO", "SCOPE_ADMIN")
+                        .antMatchers("/paciente/get/pageable").hasAnyAuthority("SCOPE_MEDICO", "SCOPE_ADMIN")
+                        .antMatchers("/paciente/get/{email}").hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO", "SCOPE_ADMIN")
                         .antMatchers("/paciente/put/{id}").hasAuthority("SCOPE_PACIENTE")
 
                         .antMatchers("/agendamento/get/**").permitAll()
