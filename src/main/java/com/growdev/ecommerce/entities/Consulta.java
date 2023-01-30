@@ -21,7 +21,8 @@ public class Consulta implements Serializable {
     private Long id;
     private String diagnostico;
     private String prescricao;
-    private String especialidade;
+    @OneToOne
+    private Especialidade especialidade;
     @ManyToOne
     @JoinColumn(name="id_paciente")
     private Paciente paciente;
@@ -36,6 +37,6 @@ public class Consulta implements Serializable {
 //        this.paciente = new Paciente(consultaDTO.getPacienteDTO());
         this.medico = new Medico(consultaDTO.getMedicoDTO());
         this.dataConsulta = consultaDTO.getDataConsulta();
-        this.especialidade = consultaDTO.getEspecialidade();
+//        this.especialidade = consultaDTO.getEspecialidade();
     }
 }

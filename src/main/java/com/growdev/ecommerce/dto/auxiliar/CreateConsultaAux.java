@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,4 +17,5 @@ public class CreateConsultaAux {
     private String especialidadeName;
     private String pacienteEmail;
     private String medicoCrm;
+    private LocalDate dataConsulta;
 }

@@ -33,6 +33,6 @@ public class ConsultaDTO {
     this.pacienteDTO = new PacienteDTO(consulta.getPaciente());
     this.medicoDTO = new MedicoDTO(consulta.getMedico());
     this.dataConsulta = consulta.getDataConsulta();
-    this.especialidade = consulta.getEspecialidade();
+//    this.especialidade = consulta.getEspecialidade();
   }
 }

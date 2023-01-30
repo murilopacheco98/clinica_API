@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PacienteRepository extends JpaRepository<Paciente, Long> {
 
-    @Query("SELECT objeto FROM Paciente objeto where objeto.usuario.email = :email")
+    @Query("SELECT objeto FROM Paciente objeto WHERE objeto.usuario.email = :email")
     Paciente findByEmail(String email);
     Paciente findByCpf(String cpf);
 }

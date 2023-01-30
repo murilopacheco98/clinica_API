@@ -3,11 +3,13 @@ package com.growdev.ecommerce.services;
 import com.growdev.ecommerce.dto.ConsultaDTO;
 import com.growdev.ecommerce.dto.auxiliar.CreateConsultaAux;
 import com.growdev.ecommerce.entities.Consulta;
+import com.growdev.ecommerce.entities.Especialidade;
 import com.growdev.ecommerce.entities.user.Medico;
 import com.growdev.ecommerce.entities.user.Paciente;
 import com.growdev.ecommerce.exceptions.exception.BadRequestException;
 import com.growdev.ecommerce.exceptions.exception.ResourceNotFoundException;
 import com.growdev.ecommerce.repositories.ConsultaRepository;
+import com.growdev.ecommerce.repositories.EspecialidadeRepository;
 import com.growdev.ecommerce.repositories.MedicoRepository;
 import com.growdev.ecommerce.repositories.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class ConsultaService {
   private ConsultaRepository consultaRepository;
   @Autowired
   private PacienteRepository pacienteRepository;
+  @Autowired
+  private EspecialidadeRepository especialidadeRepository;
   @Autowired
   private MedicoRepository medicoRepository;
 
@@ -51,8 +55,12 @@ public class ConsultaService {
     consulta.setDiagnostico(createConsultaAux.getDiagnostico());
     consulta.setPrescricao(createConsultaAux.getPrescricao());
 
+    Especialidade especialidade = especialidadeRepository.findByNome(createConsultaAux.getEspecialidadeName());
+    if (especialidade == null) throw new BadRequestException("Não foi possível encontrar está especialidade.");
+    consulta.setEspecialidade(especialidade);
+
     Paciente paciente = pacienteRepository.findByEmail(createConsultaAux.getPacienteEmail());
-    if (paciente == null) throw new BadRequestException("Não foi possível encontrar este paciente");
+    if (paciente == null) throw new BadRequestException("Não foi possível encontrar este paciente.");
     consulta.setPaciente(paciente);
 
     Medico medico = medicoRepository.findByCrm(createConsultaAux.getMedicoCrm());
