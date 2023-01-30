@@ -1,10 +1,7 @@
 package com.growdev.ecommerce.services.user;
 
-import com.growdev.ecommerce.dto.AgendamentoDTO;
-import com.growdev.ecommerce.dto.ConsultaDTO;
+import com.growdev.ecommerce.dto.EspecialidadeDTO;
 import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
-import com.growdev.ecommerce.entities.Agendamento;
-import com.growdev.ecommerce.entities.Consulta;
 import com.growdev.ecommerce.entities.Especialidade;
 import com.growdev.ecommerce.entities.user.Medico;
 import com.growdev.ecommerce.entities.user.UserEntity;
@@ -69,8 +66,8 @@ public class MedicoService { //foi implementado porque é ele que retorna
         if (medicoDTO.getEspecialidade().isEmpty()) {
             throw new BadRequestException("A especialidade é obrigatória.");
         }
-        for (Especialidade especialidade : medicoDTO.getEspecialidade()) {
-            Especialidade especialidadeFound = especialidadeRepository.findByNome(especialidade.getNome());
+        for (EspecialidadeDTO especialidadeDTO : medicoDTO.getEspecialidade()) {
+            Especialidade especialidadeFound = especialidadeRepository.findByNome(especialidadeDTO.getNome());
             if (especialidadeFound == null) throw new ResourceNotFoundException("Especialidade não encontrada.");
             medico.getEspecialidade().add(especialidadeFound);
         }
@@ -101,17 +98,17 @@ public class MedicoService { //foi implementado porque é ele que retorna
         UserEntity userEntity = userRepository.findById(medicoDTO.getUserDTO().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
         medico.setUserEntity(userEntity);
-        for (Especialidade especialidade : medicoDTO.getEspecialidade()) {
-            Especialidade especialidadeFound = especialidadeRepository.findById(especialidade.getId())
+        for (EspecialidadeDTO especialidadeDTO : medicoDTO.getEspecialidade()) {
+            Especialidade especialidadeFound = especialidadeRepository.findById(especialidadeDTO.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Role não encontrada."));
             medico.getEspecialidade().add(especialidadeFound);
         }
-        for (AgendamentoDTO agendamentoDTO : medicoDTO.getAgendamentoDTOs()) {
-            medico.getAgendamentos().add(new Agendamento(agendamentoDTO));
-        }
-        for (ConsultaDTO consultaDTO : medicoDTO.getConsultaDTOs()) {
-            medico.getConsultas().add(new Consulta(consultaDTO));
-        }
+//        for (AgendamentoDTO agendamentoDTO : medicoDTO.getAgendamentoDTOs()) {
+//            medico.getAgendamentos().add(new Agendamento(agendamentoDTO));
+//        }
+//        for (ConsultaDTO consultaDTO : medicoDTO.getConsultaDTOs()) {
+//            medico.getConsultas().add(new Consulta(consultaDTO));
+//        }
         medicoRepository.save(medico);
         return new MedicoDTO(medico);
     }

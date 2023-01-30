@@ -54,12 +54,15 @@ public class SecurityConfig {
                         .antMatchers("/paciente/get/{email}").hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO", "SCOPE_ADMIN")
                         .antMatchers("/paciente/put/{id}").hasAuthority("SCOPE_PACIENTE")
 
-                        .antMatchers("/agendamento/get/**").permitAll()
-                        .antMatchers("/agendamento/post", "/agendamento/put/**", "/agendamento/delete/**")
-                            .hasAnyAuthority("SCOPE_PACIENTE","SCOPE_MEDICO")
+                        .antMatchers("/agendamento/get/**").hasAnyAuthority("SCOPE_PACIENTE","SCOPE_MEDICO", "SCOPE_ADMIN")
 
-                        .antMatchers("/consulta/get/**").permitAll()
-                        .antMatchers("/consulta/**").hasAuthority("SCOPE_MEDICO")
+                        .antMatchers("/agendamento/post", "agendamento/check/availability")
+                            .hasAnyAuthority("SCOPE_PACIENTE","SCOPE_MEDICO")
+                        .antMatchers("/agendamento/put/**", "/agendamento/delete/**")
+                        .hasAnyAuthority("SCOPE_MEDICO")
+
+                        .antMatchers("/consulta/get/**").hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO")
+                        .antMatchers("/consulta/**").hasAnyAuthority("SCOPE_MEDICO", "SCOPE_ADMIN")
 
                         .antMatchers("/especialidade/get/**").permitAll()
                         .antMatchers("/especialidade/**").hasAuthority("SCOPE_ADMIN")

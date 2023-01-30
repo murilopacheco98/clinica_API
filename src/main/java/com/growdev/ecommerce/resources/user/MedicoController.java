@@ -4,9 +4,7 @@ import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
 import com.growdev.ecommerce.services.user.MedicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +16,6 @@ import javax.validation.Valid;
 public class MedicoController {
     @Autowired
     MedicoService medicoService;
-
-//    @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,//Primeira página
-//    @RequestParam(value = "linhasPorPagina", defaultValue = "1") Integer linhasPorPagina,//quantidade de registros por pagina
-//    @RequestParam(value = "direction", defaultValue = "ASC") String direction,//direção Crescente
-//    @RequestParam(value = "ordenado", defaultValue = "nome") String nome //Ordem
-//    //exemplo de URL: /medico/get/pageable?pagina=0&linhasPorPagina=12&nome=teste
 
     @GetMapping("/get/pageable")
     public ResponseEntity<Page<MedicoDTO>> findAllPageable(Pageable pageable) {

@@ -1,4 +1,4 @@
-package com.growdev.ecommerce.dto;
+package com.growdev.ecommerce.dto.auxiliar;
 
 import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
 import lombok.*;

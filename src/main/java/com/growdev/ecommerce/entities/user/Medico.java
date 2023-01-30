@@ -9,7 +9,6 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +35,7 @@ public class Medico extends AbstractEntity {
     @Column(name = "data_inscricao", nullable = false)
     private LocalDate dataInscricao;
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "medico_especialidade",
             joinColumns = @JoinColumn(name = "id_medico", referencedColumnName = "id"),
@@ -44,7 +43,7 @@ public class Medico extends AbstractEntity {
     )
     private Set<Especialidade> especialidade = new HashSet<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "medico")
+    @OneToMany(mappedBy = "medico", fetch = FetchType.EAGER)
     private Set<Agendamento> agendamentos = new HashSet<>();
 //    private Set<Horario> horarios = new HashSet<>();
 
@@ -52,16 +51,16 @@ public class Medico extends AbstractEntity {
     @JoinColumn(name = "id_usuario")
     private UserEntity userEntity;
     @JsonIgnore
-    @OneToMany(mappedBy = "paciente")
+    @OneToMany(mappedBy = "paciente", fetch = FetchType.EAGER)
     private Set<Consulta> consultas = new HashSet<>();
 
     public Medico(MedicoDTO medicoDTO) {
         this.nome = medicoDTO.getNome();
         this.crm = medicoDTO.getCrm();
         this.dataInscricao = medicoDTO.getDataInscricao();
-        medicoDTO.getAgendamentoDTOs().forEach(agendamentoDTO -> this.agendamentos.add(new Agendamento(agendamentoDTO)));
-        this.especialidade.addAll(medicoDTO.getEspecialidade());
-        medicoDTO.getConsultaDTOs().forEach(consultaDTO -> this.consultas.add(new Consulta(consultaDTO)));
+//        medicoDTO.getAgendamentoDTOs().forEach(agendamentoDTO -> this.agendamentos.add(new Agendamento(agendamentoDTO)));
+//        this.especialidade.addAll(medicoDTO.getEspecialidade());
+//        medicoDTO.getConsultaDTOs().forEach(consultaDTO -> this.consultas.add(new Consulta(consultaDTO)));
 //        this.userEntity = new UserEntity(medicoDTO.getUserDTO());
     }
 }

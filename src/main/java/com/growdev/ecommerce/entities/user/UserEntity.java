@@ -1,13 +1,9 @@
 package com.growdev.ecommerce.entities.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.growdev.ecommerce.dto.user.UserDTO;
-import com.growdev.ecommerce.dto.user.UserInsertDTO;
 import com.growdev.ecommerce.entities.Authority;
-import com.growdev.ecommerce.repositories.UserRepository;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,9 +43,6 @@ public class UserEntity implements UserDetails, Serializable {//vai ser a classe
   )
   private Set<Authority> authority = new HashSet<>();
 
-//  @OneToOne
-//  @JoinColumn(name = "id_dados_usuario")
-//  private AbstractEntity abstractEntity;
   @Column(name = "data_criacao")
   private Instant criado;
   @Column(name = "data_atualizacao")

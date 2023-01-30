@@ -1,10 +1,12 @@
 package com.growdev.ecommerce.resources;
 
 import com.growdev.ecommerce.dto.AgendamentoDTO;
+import com.growdev.ecommerce.dto.auxiliar.AgendamentoAux;
+import com.growdev.ecommerce.dto.auxiliar.DisponibilidadeDate;
 import com.growdev.ecommerce.services.AgendamentoService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,21 +24,15 @@ public class AgendamentoController {
   AgendamentoService agendamentoService;
 
   @GetMapping("/get/pageable")
-  public ResponseEntity<Page<AgendamentoDTO>> findAllPageable(
-    @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,//Primeira página
-    @RequestParam(value = "linhasPorPagina", defaultValue = "1") Integer linhasPorPagina,//quantidade de registros por pagina
-    @RequestParam(value = "direction", defaultValue = "ASC") String direction,//direção Crescente
-    @RequestParam(value = "ordenado", defaultValue = "dataConsulta") String nome //Ordem
-    //exemplo de URL: /city/get/pageable?pagina=0&linhasPorPagina=12&nome=teste
-  ) {
-    PageRequest list = PageRequest.of(pagina, linhasPorPagina, Sort.Direction.valueOf(direction), nome);
-    Page<AgendamentoDTO> cityDTOS = agendamentoService.findAllPaged(list);
+  public ResponseEntity<Page<AgendamentoDTO>> findAllPageable(Pageable pageable) {
+    Page<AgendamentoDTO> cityDTOS = agendamentoService.findAllPaged(pageable);
     return ResponseEntity.ok().body(cityDTOS);
   }
 
-  @GetMapping("/get/all")
-  public ResponseEntity<List<AgendamentoDTO>> findAllable() {
-    return ResponseEntity.ok().body(agendamentoService.findAll());
+  @GetMapping("/get/pageable/{id}")
+  public ResponseEntity<Page<AgendamentoDTO>> findAllPageableByUserId(@PathVariable("id") Long id, Pageable pageable) {
+    Page<AgendamentoDTO> agendamentoDTOs = agendamentoService.findByUserId(id, pageable);
+    return ResponseEntity.ok().body(agendamentoDTOs);
   }
 
   @GetMapping("/get/{id}")
@@ -45,6 +41,11 @@ public class AgendamentoController {
     return ResponseEntity.ok().body(agendamentoDTO);
   }
 
+  @PostMapping("/check/availability")
+  public ResponseEntity<List<DisponibilidadeDate>> getAvailability(@RequestBody EspecialidadeAux especialidadeAux) {
+    List<DisponibilidadeDate> disponibilidadeDateList = agendamentoService.checkAvailability(especialidadeAux.getEspecialidade());
+    return ResponseEntity.ok().body(disponibilidadeDateList);
+  }
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
     agendamentoService.delete(id);
@@ -52,8 +53,8 @@ public class AgendamentoController {
   }
 
   @PostMapping("/post")
-  public ResponseEntity<AgendamentoDTO> insert(@RequestBody AgendamentoDTO agendamentoDTO) {
-    agendamentoDTO = agendamentoService.create(agendamentoDTO);
+  public ResponseEntity<AgendamentoDTO> insert(@RequestBody AgendamentoAux agendamentoAux) {
+    AgendamentoDTO agendamentoDTO = agendamentoService.create(agendamentoAux);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
       .buildAndExpand(agendamentoDTO.getId()).toUri();
     return ResponseEntity.created(uri).body(agendamentoDTO);
@@ -63,5 +64,10 @@ public class AgendamentoController {
   public ResponseEntity<AgendamentoDTO> atualizar(@Valid @RequestBody AgendamentoDTO agendamentoDTO, @PathVariable Long id) {
     agendamentoDTO = agendamentoService.update(agendamentoDTO, id);
     return ResponseEntity.ok().body(agendamentoDTO);
+  }
+
+  @Data
+  public static class EspecialidadeAux {
+    private String especialidade;
   }
 }

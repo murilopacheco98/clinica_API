@@ -7,13 +7,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 @Entity
 @Table(name = "consulta")
 public class Consulta implements Serializable {
@@ -22,23 +21,21 @@ public class Consulta implements Serializable {
     private Long id;
     private String diagnostico;
     private String prescricao;
+    private String especialidade;
     @ManyToOne
     @JoinColumn(name="id_paciente")
     private Paciente paciente;
     @ManyToOne
     @JoinColumn(name="id_medico")
     private Medico medico;
-    private Instant dataConsulta;
-
-    @PrePersist
-    public void prePersist() {
-        dataConsulta = Instant.now();
-    }
+    private LocalDate dataConsulta;
 
     public Consulta(ConsultaDTO consultaDTO) {
         this.diagnostico = consultaDTO.getDiagnostico();
         this.prescricao = consultaDTO.getPrescricao();
 //        this.paciente = new Paciente(consultaDTO.getPacienteDTO());
         this.medico = new Medico(consultaDTO.getMedicoDTO());
+        this.dataConsulta = consultaDTO.getDataConsulta();
+        this.especialidade = consultaDTO.getEspecialidade();
     }
 }

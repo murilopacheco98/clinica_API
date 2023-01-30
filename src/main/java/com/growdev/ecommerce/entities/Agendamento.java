@@ -11,13 +11,12 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 @Entity
 @Table(name = "agendamento")
 public class Agendamento implements Serializable {
@@ -34,10 +33,12 @@ public class Agendamento implements Serializable {
     @JoinColumn(name = "id_paciente")
     private Paciente paciente;
     private String titulo;
+    @Column(columnDefinition = "TIME")
     @NotNull
-    private LocalDateTime inicio;
+    private LocalTime inicio;
     @NotNull
-    private LocalDateTime fim;
+    @Column(columnDefinition = "TIME")
+    private LocalTime fim;
 //    @ManyToOne
 //    @JoinColumn(name="id_horario")
 //    private Horario horario;

@@ -4,8 +4,6 @@ import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
 import com.growdev.ecommerce.dto.user.user.PacienteDTO;
 import com.growdev.ecommerce.entities.*;
 import com.growdev.ecommerce.entities.Especialidade;
-import com.growdev.ecommerce.entities.user.Medico;
-import com.growdev.ecommerce.entities.user.Paciente;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,12 +27,10 @@ public class AgendamentoDTO {
     private MedicoDTO medicoDTO;
     private PacienteDTO pacienteDTO;
     private String titulo;
-
     @NotNull
-    private LocalDateTime inicio;
-
+    private LocalTime inicio;
     @NotNull
-    private LocalDateTime fim;
+    private LocalTime fim;
     private LocalDate dataConsulta;
 
     public AgendamentoDTO(Agendamento agendamento) {

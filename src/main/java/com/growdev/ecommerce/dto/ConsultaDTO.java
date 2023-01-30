@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import java.time.Instant;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,9 +21,10 @@ public class ConsultaDTO {
   private String diagnostico;
   @NotBlank(message = "A prescrição médica é obrigatória.")
   private String prescricao;
+  private String especialidade;
   private PacienteDTO pacienteDTO;
   private MedicoDTO medicoDTO;
-  private Instant dataConsulta;
+  private LocalDate dataConsulta;
 
   public ConsultaDTO(Consulta consulta) {
     this.id = consulta.getId();
@@ -32,5 +33,6 @@ public class ConsultaDTO {
     this.pacienteDTO = new PacienteDTO(consulta.getPaciente());
     this.medicoDTO = new MedicoDTO(consulta.getMedico());
     this.dataConsulta = consulta.getDataConsulta();
+    this.especialidade = consulta.getEspecialidade();
   }
 }

@@ -1,11 +1,6 @@
 package com.growdev.ecommerce.services.user;
 
-import com.growdev.ecommerce.dto.AgendamentoDTO;
-import com.growdev.ecommerce.dto.ConsultaDTO;
-import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.dto.user.user.PacienteDTO;
-import com.growdev.ecommerce.entities.Agendamento;
-import com.growdev.ecommerce.entities.Consulta;
 import com.growdev.ecommerce.entities.user.Paciente;
 import com.growdev.ecommerce.entities.user.UserEntity;
 import com.growdev.ecommerce.exceptions.exception.BadRequestException;
@@ -82,14 +77,14 @@ public class PacienteService { //foi implementado porque é ele que retorna
         paciente.setDataNascimento(pacienteDTO.getDataNascimento());
         paciente.setCpf(pacienteDTO.getCpf());
 
-        for (AgendamentoDTO agendamentoDTO : pacienteDTO.getAgendamentoDTOs()) {
-            Agendamento agendamento = new Agendamento(agendamentoDTO);
-            paciente.getAgendamentos().add(agendamento);
-        }
-        for (ConsultaDTO consultaDTO : pacienteDTO.getConsultaDTOs()) {
-            Consulta consulta = new Consulta(consultaDTO);
-            paciente.getConsultas().add(consulta);
-        }
+//        for (AgendamentoDTO agendamentoDTO : pacienteDTO.getAgendamentoDTOs()) {
+//            Agendamento agendamento = new Agendamento(agendamentoDTO);
+//            paciente.getAgendamentos().add(agendamento);
+//        }
+//        for (ConsultaDTO consultaDTO : pacienteDTO.getConsultaDTOs()) {
+//            Consulta consulta = new Consulta(consultaDTO);
+//            paciente.getConsultas().add(consulta);
+//        }
         pacienteRepository.save(paciente);
         return new PacienteDTO(paciente);
     }
