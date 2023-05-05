@@ -3,12 +3,12 @@ package com.growdev.ecommerce.dto;
 import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
 import com.growdev.ecommerce.dto.user.user.PacienteDTO;
 import com.growdev.ecommerce.entities.Consulta;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class ConsultaDTO {
   private String diagnostico;
   @NotBlank(message = "A prescrição médica é obrigatória.")
   private String prescricao;
-  private String especialidade;
+  private String especialidadeName;
   private PacienteDTO pacienteDTO;
   private MedicoDTO medicoDTO;
   private LocalDate dataConsulta;
@@ -33,6 +33,6 @@ public class ConsultaDTO {
     this.pacienteDTO = new PacienteDTO(consulta.getPaciente());
     this.medicoDTO = new MedicoDTO(consulta.getMedico());
     this.dataConsulta = consulta.getDataConsulta();
-//    this.especialidade = consulta.getEspecialidade();
+    this.especialidadeName = consulta.getEspecialidade().getNome();
   }
 }

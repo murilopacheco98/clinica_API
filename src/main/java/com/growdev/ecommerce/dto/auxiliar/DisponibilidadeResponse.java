@@ -1,11 +1,11 @@
 package com.growdev.ecommerce.dto.auxiliar;
 
 import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor

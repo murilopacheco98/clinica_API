@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
 
     @Query("SELECT objeto FROM Consulta objeto WHERE objeto.paciente.id = :id")
-    Page<Consulta> findByIdPacienteId(Long id, Pageable pageable);
+    Page<Consulta> findByPacienteId(Long id, Pageable pageable);
 
     @Query("SELECT objeto FROM Consulta objeto WHERE objeto.medico.id = :id")
-    Page<Consulta> findByIdMedicoId(Long id, Pageable pageable);
+    Page<Consulta> findByMedicoId(Long id, Pageable pageable);
 
 }

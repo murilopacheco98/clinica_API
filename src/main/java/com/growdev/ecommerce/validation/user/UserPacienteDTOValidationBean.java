@@ -1,16 +1,13 @@
 package com.growdev.ecommerce.validation.user;
 
-import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.dto.user.user.UserPacienteDTO;
-import com.growdev.ecommerce.entities.user.Paciente;
-import com.growdev.ecommerce.entities.user.UserEntity;
 import com.growdev.ecommerce.exceptions.FieldMessage;
 import com.growdev.ecommerce.repositories.PacienteRepository;
 import com.growdev.ecommerce.repositories.UserRepository;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
 import java.util.List;
 

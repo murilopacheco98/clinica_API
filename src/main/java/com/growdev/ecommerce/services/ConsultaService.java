@@ -40,13 +40,13 @@ public class ConsultaService {
 
   @Transactional(readOnly = true)
   public Page<ConsultaDTO> findAllByPacienteId(Long id, Pageable pageable) {
-    Page<Consulta> consultaPage = consultaRepository.findByIdPacienteId(id, pageable);
+    Page<Consulta> consultaPage = consultaRepository.findByPacienteId(id, pageable);
     return consultaPage.map(ConsultaDTO::new);
   }
 
   @Transactional(readOnly = true)
   public Page<ConsultaDTO> findAllByMedicoId(Long id, Pageable pageable) {
-    Page<Consulta> consultaPage = consultaRepository.findByIdMedicoId(id, pageable);
+    Page<Consulta> consultaPage = consultaRepository.findByMedicoId(id, pageable);
     return consultaPage.map(ConsultaDTO::new);
   }
 
@@ -66,6 +66,7 @@ public class ConsultaService {
     Medico medico = medicoRepository.findByCrm(createConsultaAux.getMedicoCrm());
     if (medico == null) throw new BadRequestException("Não foi possível encontrar este médico.");
     consulta.setMedico(medico);
+    consulta.setDataConsulta(createConsultaAux.getDataConsulta());
 
     try {
       consulta = consultaRepository.save(consulta);
@@ -86,6 +87,7 @@ public class ConsultaService {
     consulta.setPaciente(paciente);
     Medico medico = medicoRepository.findByNomeJaleco(consultaDTO.getMedicoDTO().getNomeJaleco());
     consulta.setMedico(medico);
+    consulta.setDataConsulta(consultaDTO.getDataConsulta());
     try {
       consultaRepository.save(consulta);
     } catch (Exception e) {

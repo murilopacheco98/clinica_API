@@ -4,14 +4,14 @@ import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
 import com.growdev.ecommerce.dto.user.user.PacienteDTO;
 import com.growdev.ecommerce.entities.*;
 import com.growdev.ecommerce.entities.Especialidade;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -21,8 +21,6 @@ import java.time.LocalTime;
 @Setter
 public class AgendamentoDTO {
     private Long id;
-    @NotBlank(message = "A especialidade é obrigatória")
-    @Size(min = 2, max = 50, message = "Deve ter entre 2 a 50 caracteres")
     private Especialidade especialidade;
     private MedicoDTO medicoDTO;
     private PacienteDTO pacienteDTO;
@@ -37,7 +35,9 @@ public class AgendamentoDTO {
         this.id = agendamento.getId();
         this.especialidade = agendamento.getEspecialidade();
         this.medicoDTO = new MedicoDTO(agendamento.getMedico());
-        this.pacienteDTO = new PacienteDTO(agendamento.getPaciente());
+        if (agendamento.getPaciente() != null) {
+            this.pacienteDTO = new PacienteDTO(agendamento.getPaciente());
+        }
         this.titulo = agendamento.getTitulo();
         this.inicio = agendamento.getInicio();
         this.fim = agendamento.getFim();

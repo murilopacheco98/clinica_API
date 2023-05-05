@@ -16,7 +16,6 @@ public class AgendamentoAux {
     private String titulo;
     private String especialidadeNome;
     private String medicoCrm;
-    private String pacienteCpf;
     private boolean paciente;
     private String email;
     private LocalTime inicio;

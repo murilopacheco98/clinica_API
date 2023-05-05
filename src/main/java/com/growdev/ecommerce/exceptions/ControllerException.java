@@ -3,6 +3,7 @@ package com.growdev.ecommerce.exceptions;
 import com.growdev.ecommerce.exceptions.exception.BadRequestException;
 import com.growdev.ecommerce.exceptions.exception.InternalServerException;
 import com.growdev.ecommerce.exceptions.exception.ResourceNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.DataBinder;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 
 @ControllerAdvice

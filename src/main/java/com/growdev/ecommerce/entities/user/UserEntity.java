@@ -3,12 +3,12 @@ package com.growdev.ecommerce.entities.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.entities.Authority;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Collection;
@@ -33,7 +33,6 @@ public class UserEntity implements UserDetails, Serializable {//vai ser a classe
   private String senha;
   @Column(name = "codigo_verificador", length = 6)
   private String codigoVerificador;
-//  @JsonManagedReference
   @JsonIgnore
   @ManyToMany(fetch = FetchType.EAGER) // so pra forçar a buscar do usuario e nele vir as roles
   @JoinTable(

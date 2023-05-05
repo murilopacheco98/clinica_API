@@ -3,9 +3,9 @@ package com.growdev.ecommerce.entities;
 import com.growdev.ecommerce.dto.ConsultaDTO;
 import com.growdev.ecommerce.entities.user.Medico;
 import com.growdev.ecommerce.entities.user.Paciente;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 

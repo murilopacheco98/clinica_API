@@ -2,13 +2,13 @@ package com.growdev.ecommerce.dto.user.user;
 
 import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.entities.user.Paciente;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import java.sql.Date;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +26,7 @@ public class PacienteDTO {
 //    private Set<AgendamentoDTO> agendamentoDTOs = new HashSet<>();
 //    private Set<ConsultaDTO> consultaDTOs = new HashSet<>();
     private UserDTO userDTO;
+    
     public PacienteDTO(Paciente paciente) {
         this.id = paciente.getId();
         this.nome = paciente.getNome();

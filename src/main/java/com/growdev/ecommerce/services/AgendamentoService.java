@@ -43,31 +43,39 @@ public class AgendamentoService {
     }
 
     @Transactional(readOnly = true)
+    public Page<AgendamentoDTO> findAllPaged(Pageable pageable) {
+        Page<Agendamento> agendamentoPage = agendamentoRepository.findAll(pageable);
+        return agendamentoPage.map(AgendamentoDTO::new);
+    }
+
+    @Transactional(readOnly = true)
     public AgendamentoDTO findById(Long id) {
         Agendamento agendamento = agendamentoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("NOT FOUND " + id));
         return new AgendamentoDTO(agendamento);
     }
 
-    public Page<AgendamentoDTO> findByUserId(Long id, Pageable pageable) {
-      Page<Agendamento> agendamentoPage = agendamentoRepository.findByIdAbstractEntityId(id, pageable);
-      return agendamentoPage.map(AgendamentoDTO::new);
-    };
+    public Page<AgendamentoDTO> findByPacienteId(Long id, Pageable pageable) {
+        Page<Agendamento> agendamentoPage = agendamentoRepository.findByPacienteId(id, pageable);
+        return agendamentoPage.map(AgendamentoDTO::new);
+    }
+
+    public Page<AgendamentoDTO> findByMedicoId(Long id, Pageable pageable) {
+        Page<Agendamento> agendamentoPage = agendamentoRepository.findByMedicoId(id, pageable);
+        return agendamentoPage.map(AgendamentoDTO::new);
+    }
 
     public void delete(Long id) {
         try {
             agendamentoRepository.deleteById(id);
-        }
-        catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Not found " + id);
-        }
-        catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new InternalServerException("Intregrity Violation");
         }
     }
 
     public AgendamentoDTO create(AgendamentoAux agendamentoAux) {
         Agendamento agendamento = new Agendamento();
-
         agendamento.setTitulo(agendamentoAux.getTitulo());
         agendamento.setInicio(agendamentoAux.getInicio());
         if (agendamentoAux.isPaciente()) {
@@ -76,31 +84,29 @@ public class AgendamentoService {
             agendamento.setFim(agendamentoAux.getFim());
         }
 
-        Especialidade especialidade = especialidadeRepository.findByNome(agendamentoAux.getEspecialidadeNome());
-        if (especialidade == null) throw new ResourceNotFoundException("Especialidade não encontrada.");
-        agendamento.setEspecialidade(especialidade);
+        if (!Objects.equals(agendamentoAux.getEmail(), "")) {
+            Especialidade especialidade = especialidadeRepository.findByNome(agendamentoAux.getEspecialidadeNome());
+            if (especialidade == null) throw new ResourceNotFoundException("Especialidade não encontrada.");
+            agendamento.setEspecialidade(especialidade);
+        }
 
         agendamento.setDataConsulta(agendamentoAux.getDataConsulta());
         Medico medico = medicoRepository.findByCrm(agendamentoAux.getMedicoCrm());
         if (medico == null) throw new ResourceNotFoundException("Medico não encontrada.");
         agendamento.setMedico(medico);
 
-        Paciente paciente = pacienteRepository.findByCpf(agendamentoAux.getPacienteCpf());
-        if (paciente == null) {
-            paciente = pacienteRepository.findByEmail(agendamentoAux.getEmail());
-        }
-
-        if (paciente == null) throw new ResourceNotFoundException("Paciente não encontrado.");
-
-        agendamento.setPaciente(paciente);
-        for (Agendamento agendamentoFound : paciente.getAgendamentos()) {
-            if (agendamentoFound.getDataConsulta().toString().equals(agendamentoAux.getDataConsulta().toString())) {
-                if (agendamentoFound.getInicio().toString().equals(agendamentoAux.getInicio().toString())) {
-                    throw new BadRequestException("Este horário já está agendado.");
+        if (!Objects.equals(agendamentoAux.getEmail(), "")) {
+            Paciente paciente = pacienteRepository.findByEmail(agendamentoAux.getEmail());
+            if (paciente == null) throw new ResourceNotFoundException("Paciente não encontrado.");
+            agendamento.setPaciente(paciente);
+            for (Agendamento agendamentoFound : paciente.getAgendamentos()) {
+                if (agendamentoFound.getDataConsulta().toString().equals(agendamentoAux.getDataConsulta().toString())) {
+                    if (agendamentoFound.getInicio().toString().equals(agendamentoAux.getInicio().toString())) {
+                        throw new BadRequestException("Este horário já está agendado.");
+                    }
                 }
             }
         }
-
         try {
             agendamento = agendamentoRepository.save(agendamento);
         } catch (Exception e) {
@@ -112,22 +118,29 @@ public class AgendamentoService {
     public AgendamentoDTO update(AgendamentoDTO agendamentoAux, Long id) {
         Agendamento agendamento = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Agendamento não encontrado."));
-//    Horario horario = horarioRepository.findByHoraMinuto(agendamentoAux.getHorario().getHoraMinuto());
-//    if (horario == null) throw new ResourceNotFoundException("Horario não encontrado.");
-//    agendamento.setHorario(horario);
 
-        Especialidade especialidade = especialidadeRepository.findByNome(agendamentoAux.getEspecialidade().getNome());
-        if (especialidade == null) throw new ResourceNotFoundException("Horario não encontrado.");
-        agendamento.setEspecialidade(especialidade);
+        agendamento.setTitulo(agendamentoAux.getTitulo());
+//        if (agendamentoAux.getEspecialidade() != null) {
+//            Especialidade especialidade = especialidadeRepository.findByNome(agendamentoAux.getEspecialidade().getNome());
+//            if (especialidade == null) throw new ResourceNotFoundException("Especialidade não encontrada.");
+//            agendamento.setEspecialidade(especialidade);
+//        }
 
+        if (agendamentoAux.getInicio().getHour() > agendamentoAux.getFim().getHour()) {
+            throw new BadRequestException("O fim deve ser antes do início.");
+        }
+        agendamento.setInicio(agendamentoAux.getInicio());
+        agendamento.setFim(agendamentoAux.getFim());
         agendamento.setDataConsulta(agendamentoAux.getDataConsulta());
-        Medico medico = medicoRepository.findByNomeJaleco(agendamentoAux.getMedicoDTO().getNomeJaleco());
-        if (medico == null) throw new ResourceNotFoundException("Horario não encontrado.");
-        agendamento.setMedico(medico);
 
-        Paciente paciente = pacienteRepository.findByCpf(agendamentoAux.getPacienteDTO().getCpf());
-        if (paciente == null) throw new ResourceNotFoundException("Horario não encontrado.");
-        agendamento.setPaciente(paciente);
+//        Medico medico = medicoRepository.findByNomeJaleco(agendamentoAux.getMedicoDTO().getNomeJaleco());
+//        if (medico == null) throw new ResourceNotFoundException("Horario não encontrado.");
+//        agendamento.setMedico(medico);
+
+//        Paciente paciente = pacienteRepository.findByCpf(agendamentoAux.getPacienteDTO().getCpf());
+//        if (paciente == null) throw new ResourceNotFoundException("Horario não encontrado.");
+//        agendamento.setPaciente(paciente);
+
         try {
             agendamentoRepository.save(agendamento);
         } catch (Exception e) {
@@ -136,11 +149,6 @@ public class AgendamentoService {
         return new AgendamentoDTO(agendamento);
     }
 
-    @Transactional(readOnly = true)
-    public Page<AgendamentoDTO> findAllPaged(Pageable pageable) {
-        Page<Agendamento> agendamentoPage = agendamentoRepository.findAll(pageable);
-        return agendamentoPage.map(AgendamentoDTO::new);
-    }
 
     public List<DisponibilidadeDate> checkAvailability(String especialidade) {
         List<String> date = List.of(LocalDate.now().toString().split("-"));
@@ -149,8 +157,7 @@ public class AgendamentoService {
         String dayNow = date.get(2);
 
         int lastDay = 28;
-        if (Objects.equals(monthNow, "02")) lastDay = 28;
-        else if (Objects.equals(monthNow, "04") | Objects.equals(monthNow, "06") | Objects.equals(monthNow, "09") | Objects.equals(monthNow, "11")) {
+        if (Objects.equals(monthNow, "04") | Objects.equals(monthNow, "06") | Objects.equals(monthNow, "09") | Objects.equals(monthNow, "11")) {
             lastDay = 30;
         } else lastDay = 31;
 
@@ -202,7 +209,6 @@ public class AgendamentoService {
                                 HorarioCompromisso horarioCompromisso = new HorarioCompromisso(agendamento.getInicio(), agendamento.getFim());
                                 listAgendamentos.add(horarioCompromisso);
                             }
-//                            List<HorarioCompromisso> horarioOcupado = new ArrayList<>();
                             for (HorarioCompromisso horarioCompromisso : listAgendamentos) {
                                 if (horarioCompromisso.getInicio().isBefore(localTimeInicio) & horarioCompromisso.getFim().isAfter(localTimeInicio)) {
                                     horarioOcupado.add(horarioCompromisso);
@@ -248,8 +254,9 @@ public class AgendamentoService {
             DisponibilidadeDate disponibilidadeDate = new DisponibilidadeDate();
             if (Integer.parseInt(day) < lastDay) {
                 LocalDate localDate = LocalDate.of(yearNow, Integer.parseInt(monthNow), Integer.parseInt(day));
-                if (Integer.parseInt(day) < 10) { disponibilidadeDate.setDay("0" + day); }
-                else disponibilidadeDate.setDay(day);
+                if (Integer.parseInt(day) < 10) {
+                    disponibilidadeDate.setDay("0" + day);
+                } else disponibilidadeDate.setDay(day);
                 if (Integer.parseInt(monthNow) < 10) disponibilidadeDate.setMonthNumber("0" + monthNow);
                 else disponibilidadeDate.setMonthNumber(monthNow);
                 disponibilidadeDate.setYear(yearNow);
@@ -272,10 +279,10 @@ public class AgendamentoService {
                     for (Medico medico : medicosDesejados) {
                         disponibilidadeDate.getMedicoHour().get(disponibilidadeDate.getMedicoHour().size() - 1).setMedicoDTO(new MedicoDTO(medico));
                         List<HorarioCompromisso> listAgendamentos = new ArrayList<>();
-                        for (Agendamento agendamento : medico.getAgendamentos()) {
-                            HorarioCompromisso horarioCompromisso = new HorarioCompromisso(agendamento.getInicio(), agendamento.getFim());
-                            listAgendamentos.add(horarioCompromisso);
-                        }
+//                        for (Agendamento agendamento : medico.getAgendamentos()) {
+//                            HorarioCompromisso horarioCompromisso = new HorarioCompromisso(agendamento.getInicio(), agendamento.getFim());
+//                            listAgendamentos.add(horarioCompromisso);
+//                        }
                         for (HorarioCompromisso horarioCompromisso : listAgendamentos) {
                             if (horarioCompromisso.getInicio().isBefore(localTimeInicio) & horarioCompromisso.getFim().isAfter(localTimeInicio)) {
                                 horarioOcupado.add(horarioCompromisso);

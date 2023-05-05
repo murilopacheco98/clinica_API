@@ -1,12 +1,9 @@
 package com.growdev.ecommerce.entities;
 
-import com.growdev.ecommerce.entities.user.Medico;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor

@@ -3,12 +3,12 @@ package com.growdev.ecommerce.dto.user.medico;
 import com.growdev.ecommerce.dto.EspecialidadeDTO;
 import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.entities.user.Medico;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;

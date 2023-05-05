@@ -5,10 +5,10 @@ import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
 import com.growdev.ecommerce.entities.Agendamento;
 import com.growdev.ecommerce.entities.Consulta;
 import com.growdev.ecommerce.entities.Especialidade;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,13 +17,9 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "medico")
 public class Medico extends AbstractEntity {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
     @Column(name = "nome", nullable = false)
     private String nome;
 
@@ -34,6 +30,7 @@ public class Medico extends AbstractEntity {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "data_inscricao", nullable = false)
     private LocalDate dataInscricao;
+//
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -42,16 +39,17 @@ public class Medico extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "id_especialidade", referencedColumnName = "id")
     )
     private Set<Especialidade> especialidade = new HashSet<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "medico", fetch = FetchType.EAGER)
     private Set<Agendamento> agendamentos = new HashSet<>();
-//    private Set<Horario> horarios = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario")
     private UserEntity userEntity;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "paciente", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "medico", fetch = FetchType.EAGER)
     private Set<Consulta> consultas = new HashSet<>();
 
     public Medico(MedicoDTO medicoDTO) {

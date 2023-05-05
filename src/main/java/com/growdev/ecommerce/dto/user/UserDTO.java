@@ -2,12 +2,12 @@ package com.growdev.ecommerce.dto.user;
 
 import com.growdev.ecommerce.entities.Authority;
 import com.growdev.ecommerce.entities.user.UserEntity;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 @AllArgsConstructor

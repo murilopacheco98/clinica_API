@@ -2,8 +2,11 @@ package com.growdev.ecommerce.services.user;
 
 import com.growdev.ecommerce.dto.EspecialidadeDTO;
 import com.growdev.ecommerce.dto.user.medico.MedicoDTO;
+import com.growdev.ecommerce.dto.user.user.PacienteDTO;
+import com.growdev.ecommerce.entities.Consulta;
 import com.growdev.ecommerce.entities.Especialidade;
 import com.growdev.ecommerce.entities.user.Medico;
+import com.growdev.ecommerce.entities.user.Paciente;
 import com.growdev.ecommerce.entities.user.UserEntity;
 import com.growdev.ecommerce.exceptions.exception.BadRequestException;
 import com.growdev.ecommerce.exceptions.exception.InternalServerException;
@@ -13,11 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.NotAcceptableStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 //implements UserDetailsService
 @Service
@@ -51,6 +59,22 @@ public class MedicoService { //foi implementado porque é ele que retorna
             throw new ResourceNotFoundException("Usuário não encontrado");
         }
         return new MedicoDTO(usuario);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PacienteDTO> findPacientes(Long id, Pageable pageable) {
+        Medico medico = medicoRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado."));
+
+        List<Paciente> pacienteList = new ArrayList<>();
+        for (Consulta consulta : medico.getConsultas()) {
+            pacienteList.add(consulta.getPaciente());
+        }
+
+        pacienteList = pacienteList.stream().distinct().collect(Collectors.toList());
+        Page<Paciente> pacientePage = new PageImpl<>(pacienteList, pageable, pacienteList.size());
+
+        return pacientePage.map(PacienteDTO::new);
     }
 
     public MedicoDTO create(MedicoDTO medicoDTO, UserEntity userEntity) {

@@ -12,5 +12,8 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
 //    Agendamento findByName(String nome);
 
     @Query("SELECT objeto FROM Agendamento objeto WHERE objeto.paciente.id = :id")
-    Page<Agendamento> findByIdAbstractEntityId(Long id, Pageable pageable);
+    Page<Agendamento> findByPacienteId(Long id, Pageable pageable);
+
+    @Query("SELECT objeto FROM Agendamento objeto WHERE objeto.medico.id = :id")
+    Page<Agendamento> findByMedicoId(Long id, Pageable pageable);
 }

@@ -1,9 +1,9 @@
 package com.growdev.ecommerce.dto;
 
 import com.growdev.ecommerce.entities.Especialidade;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @AllArgsConstructor

@@ -1,13 +1,14 @@
 package com.growdev.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.growdev.ecommerce.dto.AgendamentoDTO;
 import com.growdev.ecommerce.entities.user.Medico;
 import com.growdev.ecommerce.entities.user.Paciente;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -23,15 +24,19 @@ public class Agendamento implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "id_especialidade")
     private Especialidade especialidade;
+
     @ManyToOne
     @JoinColumn(name = "id_medico")
     private Medico medico;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_paciente")
     private Paciente paciente;
+
     private String titulo;
     @Column(columnDefinition = "TIME")
     @NotNull
@@ -39,9 +44,6 @@ public class Agendamento implements Serializable {
     @NotNull
     @Column(columnDefinition = "TIME")
     private LocalTime fim;
-//    @ManyToOne
-//    @JoinColumn(name="id_horario")
-//    private Horario horario;
     @Column(name = "data_consulta")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataConsulta;

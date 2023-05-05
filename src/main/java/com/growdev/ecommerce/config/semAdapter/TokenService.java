@@ -30,10 +30,10 @@ public class TokenService {
         Instant instantNow = Instant.now();
         UserEntity user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new ResourceNotFoundException("Email e/ou senha errados.");
+            throw new ResourceNotFoundException("Email inválido.");
         }
         if (!passwordEncoder.matches(senha, user.getPassword())) {
-            throw new ResourceNotFoundException("Email e/ou senha errados.");
+            throw new ResourceNotFoundException("Senha inválida.");
         }
         String scope = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -52,7 +52,6 @@ public class TokenService {
         String timeToken = "24:00:00 hours";
 
         String[] splitExpirationDate = String.valueOf(expirationDate).split("T");
-//        String[] splitExpiration = splitExpirationDate[1].split("\\.");
         String messageExpirationDate = splitExpirationDate[0] + " " + Arrays.toString(splitExpirationDate[1].split("\\."));
 
         UserDTO userDTO = new UserDTO(user);

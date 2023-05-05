@@ -3,10 +3,6 @@ package com.growdev.ecommerce.config.semAdapter;
 import com.growdev.ecommerce.dto.user.UserDTO;
 import lombok.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

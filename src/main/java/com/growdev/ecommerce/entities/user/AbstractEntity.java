@@ -1,15 +1,17 @@
 package com.growdev.ecommerce.entities.user;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @MappedSuperclass
 public class AbstractEntity implements Serializable {
     @Id

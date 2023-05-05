@@ -6,12 +6,10 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
@@ -27,7 +25,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     @Autowired
     RsaKeyProperties rsaKeyProperties;
@@ -38,45 +35,47 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .csrf().disable()
-                .authorizeRequests(auth -> auth
-                        .antMatchers("/oauth/post").permitAll()
-                        .antMatchers("/authority/**").hasAuthority("SCOPE_ADMIN")
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/oauth/post").permitAll()
+                        .requestMatchers("/authority/**").hasAuthority("SCOPE_ADMIN")
 
-                        .antMatchers("/user/post/paciente").permitAll()
-                        .antMatchers("/user/post/medico", "/user/get/pageable").hasAuthority("SCOPE_ADMIN")
-                        .antMatchers("/user/get/{id}", "/user/put/{id}", "/user/delete/{id}")
-                            .hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO")
+                        .requestMatchers("/user/post/paciente").permitAll()
+                        .requestMatchers("/user/post/medico", "/user/get/pageable").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers("/user/get/{id}", "/user/put/{id}", "/user/delete/{id}")
+                        .hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO")
 
-                        .antMatchers("/medico/get/**").permitAll()
-                        .antMatchers("/medico/put/{id}").hasAuthority("SCOPE_MEDICO")
+                        .requestMatchers("/medico/get/**").permitAll()
+                        .requestMatchers("/medico/get/pacientes/{id}").hasAnyAuthority("SCOPE_MEDICO", "SCOPE_ADMIN")
+                        .requestMatchers("/medico/put/{id}").hasAnyAuthority("SCOPE_MEDICO", "SCOPE_ADMIN")
 
-                        .antMatchers("/paciente/get/pageable").hasAnyAuthority("SCOPE_MEDICO", "SCOPE_ADMIN")
-                        .antMatchers("/paciente/get/{email}").hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO", "SCOPE_ADMIN")
-                        .antMatchers("/paciente/put/{id}").hasAuthority("SCOPE_PACIENTE")
+                        .requestMatchers("/paciente/get/pageable").hasAnyAuthority("SCOPE_MEDICO", "SCOPE_ADMIN")
+                        .requestMatchers("/paciente/get/{email}").hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO", "SCOPE_ADMIN")
+                        .requestMatchers("/paciente/put/{id}").hasAuthority("SCOPE_PACIENTE")
 
-                        .antMatchers("/agendamento/get/**").hasAnyAuthority("SCOPE_PACIENTE","SCOPE_MEDICO", "SCOPE_ADMIN")
+                        .requestMatchers("/agendamento/get/**").hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO", "SCOPE_ADMIN")
 
-                        .antMatchers("/agendamento/post", "agendamento/check/availability")
-                            .hasAnyAuthority("SCOPE_PACIENTE","SCOPE_MEDICO")
-                        .antMatchers("/agendamento/put/**", "/agendamento/delete/**")
+                        .requestMatchers("/agendamento/post", "agendamento/check/availability")
+                        .hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO")
+                        .requestMatchers("/agendamento/get/paciente/{id}").hasAuthority("SCOPE_PACIENTE")
+                        .requestMatchers("/agendamento/put/**", "/agendamento/delete/**","/agendamento/get/medico/{id}")
                         .hasAnyAuthority("SCOPE_MEDICO")
 
-                        .antMatchers("/consulta/get/**").hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO")
-                        .antMatchers("/consulta/**").hasAnyAuthority("SCOPE_MEDICO", "SCOPE_ADMIN")
+                        .requestMatchers("/consulta/get/**").hasAnyAuthority("SCOPE_PACIENTE", "SCOPE_MEDICO")
+                        .requestMatchers("/consulta/**").hasAnyAuthority("SCOPE_MEDICO", "SCOPE_ADMIN")
 
-                        .antMatchers("/especialidade/get/**").permitAll()
-                        .antMatchers("/especialidade/**").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers("/especialidade/get/**").permitAll()
+                        .requestMatchers("/especialidade/**").hasAuthority("SCOPE_ADMIN")
 
-                        .antMatchers("/horario/get/**").permitAll()
-                        .antMatchers("/horario/**").hasAuthority("SCOPE_ADMIN")
+//                        .requestMatchers("/horario/get/**").permitAll()
+//                        .requestMatchers("/horario/**").hasAuthority("SCOPE_ADMIN")
 
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((ex) -> ex
-                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
+                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }

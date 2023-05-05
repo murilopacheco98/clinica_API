@@ -4,6 +4,7 @@ import com.growdev.ecommerce.dto.AgendamentoDTO;
 import com.growdev.ecommerce.dto.auxiliar.AgendamentoAux;
 import com.growdev.ecommerce.dto.auxiliar.DisponibilidadeDate;
 import com.growdev.ecommerce.services.AgendamentoService;
+import jakarta.validation.Valid;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -29,9 +29,15 @@ public class AgendamentoController {
     return ResponseEntity.ok().body(cityDTOS);
   }
 
-  @GetMapping("/get/pageable/{id}")
-  public ResponseEntity<Page<AgendamentoDTO>> findAllPageableByUserId(@PathVariable("id") Long id, Pageable pageable) {
-    Page<AgendamentoDTO> agendamentoDTOs = agendamentoService.findByUserId(id, pageable);
+  @GetMapping("/get/medico/{id}")
+  public ResponseEntity<Page<AgendamentoDTO>> findAllByMedicoId(@PathVariable("id") Long id, Pageable pageable) {
+    Page<AgendamentoDTO> agendamentoDTOs = agendamentoService.findByMedicoId(id, pageable);
+    return ResponseEntity.ok().body(agendamentoDTOs);
+  }
+
+  @GetMapping("/get/paciente/{id}")
+  public ResponseEntity<Page<AgendamentoDTO>> findAllByPacienteId(@PathVariable("id") Long id, Pageable pageable) {
+    Page<AgendamentoDTO> agendamentoDTOs = agendamentoService.findByPacienteId(id, pageable);
     return ResponseEntity.ok().body(agendamentoDTOs);
   }
 
@@ -46,6 +52,7 @@ public class AgendamentoController {
     List<DisponibilidadeDate> disponibilidadeDateList = agendamentoService.checkAvailability(especialidadeAux.getEspecialidade());
     return ResponseEntity.ok().body(disponibilidadeDateList);
   }
+
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
     agendamentoService.delete(id);

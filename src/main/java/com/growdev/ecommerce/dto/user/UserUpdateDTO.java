@@ -1,11 +1,9 @@
 package com.growdev.ecommerce.dto.user;
 
-import com.growdev.ecommerce.dto.user.UserDTO;
 import com.growdev.ecommerce.validation.user.UserUpdateValidation;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
 
 @UserUpdateValidation
 @Getter

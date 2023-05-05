@@ -5,10 +5,10 @@ import com.growdev.ecommerce.entities.user.UserEntity;
 import com.growdev.ecommerce.exceptions.FieldMessage;
 import com.growdev.ecommerce.exceptions.exception.ResourceNotFoundException;
 import com.growdev.ecommerce.repositories.UserRepository;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
